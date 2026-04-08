@@ -1,4 +1,4 @@
-# Agente de Itinerario Inteligente
+# Agente de Itinerário Inteligente
 
 <p align="center">
   <img src="./banner.png" alt="Logo do projeto" width="700" />
