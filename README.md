@@ -1,6 +1,8 @@
 # Agente de Itinerario Inteligente
 
-![Banner](banner.png)
+<p align="center">
+  <img src="./banner.png" alt="Logo do projeto" width="700" />
+</p>
 
 **Projeto Final** — Agentes de IA com LangGraph </br>
 Especializacao em Inteligencia Artificial Aplicada — IFG</br>
