@@ -1,11 +1,9 @@
 # Agente de Itinerario Inteligente
 
 **Projeto Final** — Agentes de IA com LangGraph
-
 Especializacao em Inteligencia Artificial Aplicada — IFG
 
 **Equipe:** Eduardo, Israel, Marcelo
-
 **Entrega:** Notebook + Codigo comentado + Log de execucao + Visualizacao do Grafo
 
 ---
