@@ -8,6 +8,14 @@ Especializacao em Inteligencia Artificial Aplicada — IFG</br>
 
 ---
 
+```bash
+python -m venv .venv
+source .venv/bin/activate # Mac/Linux
+.venv\Scripts\activate # Windows
+```
+
+---
+
 ## O Projeto
 
 Um agente de IA que recebe um destino de viagem, busca o clima atual via API e gera um roteiro de 1 dia adequado ao clima. Se o roteiro nao condizer com o clima, o agente refaz automaticamente (ate 3 tentativas).
