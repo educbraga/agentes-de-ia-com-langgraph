@@ -1,5 +1,7 @@
 # Agente de Itinerario Inteligente
 
+![Banner](banner.png)
+
 **Projeto Final** — Agentes de IA com LangGraph </br>
 Especializacao em Inteligencia Artificial Aplicada — IFG</br>
 
