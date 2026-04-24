@@ -4,83 +4,79 @@
   <img src="./banner.png" alt="Logo do projeto" width="700" />
 </p>
 
-**Projeto Final** — Agentes de IA com LangGraph </br>
-Especializacao em Inteligencia Artificial Aplicada — IFG</br>
+**Projeto Final** — Agentes de IA com LangGraph  
+Especialização em Inteligência Artificial Aplicada — IFG  
 
-**Equipe:** Eduardo, Israel, Marcelo</br>
-**Entrega:** Notebook + Codigo comentado + Log de execucao + Visualizacao do Grafo
-
----
-
-```bash
-python -m venv .venv
-source .venv/bin/activate # Mac/Linux
-.venv\Scripts\activate # Windows
-```
+**Equipe:** Eduardo Braga, Israel Magalhães, Marcelo Carvalho
 
 ---
 
-## O Projeto
+## Sobre
 
-Um agente de IA que recebe um destino de viagem, busca o clima atual via API e gera um roteiro de 1 dia adequado ao clima. Se o roteiro nao condizer com o clima, o agente refaz automaticamente (ate 3 tentativas).
+Agente de IA construído com **LangGraph** que recebe um destino de viagem, consulta o clima atual via API externa e gera um roteiro de 1 dia adequado ao clima. Se o roteiro proposto não condiz com o clima (ex: praia em dia de chuva), o agente rejeita e refaz automaticamente — até 3 tentativas.
 
 ```
-Pesquisador (clima) -> Planejador (roteiro) -> Validador
-                             ^                    |
-                             +--- (se rejeitado) -+
+Pesquisador (clima) → Planejador (roteiro) → Validador
+                            ↑                    │
+                            └── se rejeitado ────┘
 ```
 
-## Divisao do Trabalho
+## Arquitetura
 
-Cada um e responsavel por um bloco de secoes do notebook. Os blocos sao independentes: cada secao ja vem com um exemplo fixo de entrada para voce poder trabalhar sem depender de quem vem antes.
+| Nó | Responsabilidade | Tecnologia |
+|---|---|---|
+| **Pesquisador** | Recebe o destino e busca o clima atual | API Open-Meteo |
+| **Planejador** | Gera roteiro de 1 dia adequado ao clima | Groq Llama 3.3 70B (`temperature=0.7`) |
+| **Validador** | Verifica se o roteiro condiz com o clima | Groq Llama 3.3 70B (`temperature=0`) |
+| **Roteador** | Decide o próximo passo após o Validador | Função Python condicional |
 
-| Secoes do notebook                                              | Quem        | O que faz                                                           |
-| --------------------------------------------------------------- | ----------- | ------------------------------------------------------------------- |
-| 1. Setup/Imports + 2. AgentState + 3. Pesquisador               | **Marcelo** | Instalar libs, definir o state, buscar clima via API                |
-| 4. Planejador + 5. Validador + 6. Roteador                      | **Israel**  | As funcoes que usam LLM (gerar roteiro e validar) + logica do ciclo |
-| 7. Montagem do Grafo + 8. Visualizacao + 9. Execucao + 10. Demo | **Eduardo** | Montar o grafo, conectar os nos, executar e demonstrar o ciclo      |
+O estado compartilhado (`AgentState`) é um `TypedDict` com os campos `local`, `clima_encontrado`, `itinerario` e `tentativas`. O ciclo é implementado via `add_conditional_edges` do LangGraph.
 
-## Como trabalhar de forma independente
+## Como executar
 
-Cada secao do notebook tem um **exemplo fixo de entrada** para voce testar sem precisar que a secao anterior esteja pronta:
+1. **Clonar o repositório:**
+   ```bash
+   git clone https://github.com/educbraga/agentes-de-ia-com-langgraph.git
+   cd agentes-de-ia-com-langgraph
+   ```
 
-- **Marcelo:** nao precisa esperar o Israel e o Eduardo. Use `local = "Rio de Janeiro"` para testar o Pesquisador.
-- **Israel:** nao precisa esperar o Marcelo. Use `clima_encontrado = "Chuva forte, 22C"` para testar o Planejador e o Validador.
-- **Eduardo:** nao precisa esperar ninguem. Use exemplos fixos de clima e itinerario para montar e testar o grafo.
+2. **Criar e ativar o ambiente virtual:**
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate   # Mac/Linux
+   .venv\Scripts\activate      # Windows
+   ```
 
-Quando tudo estiver pronto, e so remover os exemplos fixos e conectar.
+3. **Instalar dependências:**
+   ```bash
+   pip install langgraph langchain-core langchain-groq requests jupyter
+   ```
 
-## Links de Estudo
+4. **Criar uma chave da API Groq** (gratuita) em https://console.groq.com/keys
 
-### Todos
+5. **Abrir o notebook e executar:**
+   ```bash
+   jupyter notebook projeto.ipynb
+   ```
+   No Jupyter: **Kernel → Restart & Run All**. A célula de configuração pedirá a `GROQ_API_KEY` via `getpass` — cole a chave quando solicitado (ela não é persistida no notebook).
 
-- O arquivo Projeto Final.pdf
-- LangGraph overview: https://langchain-ai.github.io/langgraph/
+## Entregáveis
 
-### Marcelo
+| Arquivo | Conteúdo |
+|---|---|
+| `projeto.ipynb` | Notebook com código comentado das 10 seções |
+| `grafo.png` | Imagem do grafo compilado (saída da seção 8) |
+| Logs do ciclo | Output das seções 9 e 10 após executar o notebook — mostram o Planejador sendo chamado novamente após rejeição do Validador |
 
-- O que e uma API: https://www.youtube.com/watch?v=Q-lyQ7BdDXE
-- API Open-Meteo (testar no browser): https://open-meteo.com/en/docs
-- Biblioteca `requests`: https://docs.python-requests.org/en/latest/user/quickstart/
-- `@tool` do LangChain: https://python.langchain.com/docs/how_to/custom_tools/
+## Critérios de avaliação atendidos
 
-### Israel
+| Critério | Peso | Onde está |
+|---|---|---|
+| **Funcionalidade** | 40% | Grafo executa end-to-end (seção 9) sem erros de estado/tipo |
+| **Uso de Ciclos** | 30% | `add_conditional_edges` (seção 7) + demonstração visível do ciclo (seção 10) |
+| **Integração de API** | 20% | Open-Meteo usada no Pesquisador (seção 3), alimentando `state["clima_encontrado"]` |
+| **Documentação** | 10% | Este README + comentários e docstrings nas células do notebook |
 
-- Groq (criar API key gratuita): https://console.groq.com/keys
-- ChatGroq no LangChain: https://python.langchain.com/docs/integrations/chat/groq/
+## Licença
 
-### Eduardo
-
-- LangGraph quickstart: https://langchain-ai.github.io/langgraph/tutorials/introduction/
-- Conditional edges: https://langchain-ai.github.io/langgraph/how-tos/branching/
-
-## Cronograma
-
-| Quando | O que                                                        |
-| ------ | ------------------------------------------------------------ |
-| 1      | Cada um estuda seus links e implementa sua parte no notebook |
-| 2      | Eduardo integra e o grupo testa                              |
-
-## Observacao
-
-- Se travar, pede ajuda no grupo
+MIT — ver `LICENSE`.
